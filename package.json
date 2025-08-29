@@ -1,0 +1,36 @@
+{
+  "name": "leave-calendar-visualizer",
+  "version": "1.0.0",
+  "main": "./dist/index.cjs.js",
+  "module": "./dist/index.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.cjs.js"
+    }
+  },
+  "license": "MIT",
+  "description": "A leave calendar visualizer component for React",
+  "keywords": [
+    "react",
+    "calendar",
+    "leave",
+    "visualizer"
+  ],
+  "author": "Lakshmi",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourname/leave-calendar-visualizer.git"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "peerDependencies": {
+    "react": ">=17.0.0",
+    "react-dom": ">=17.0.0"
+  }
+}

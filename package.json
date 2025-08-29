@@ -1,5 +1,5 @@
 {
-  "name": "leave-calendar-visualizer",
+  "name": "leave-calendar-visualizer-ui",
   "version": "1.0.0",
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.es.js",
@@ -20,7 +20,7 @@
   "author": "Lakshmi",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourname/leave-calendar-visualizer.git"
+    "url": "https://github.com/laksshmii/leave-calendar-visualizer.git"
   },
   "files": [
     "dist"

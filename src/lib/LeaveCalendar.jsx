@@ -5,15 +5,18 @@ import { motion, AnimatePresence } from "framer-motion";
 const LeaveCalendar = ({
   leaves = [],
   theme = {
-    primary: "#800000",      // titles, text
-    secondary: "#CC5500",    // highlights
-    accent: "#8C4C1F",       // extra avatars
+    primary: "#800000",
+    secondary: "#CC5500",
+    accent: "#8C4C1F",
     todayBg: "linear-gradient(135deg, #fff0f0, #f5b7b1)",
     selectedBg: "linear-gradient(135deg, #ffe8d6, #ffb385)",
     defaultBg: "linear-gradient(145deg, #ffffff, #f9f9f9)",
     scrollbarThumb: "#cc5500",
     scrollbarTrack: "#ffe8d6"
-  }
+  },
+  cellSize = 70,       // ✅ customizable cell width & height
+  radius = 12,         // ✅ customizable cell border-radius
+  containerRadius = 40 // ✅ customizable calendar container radius
 }) => {
   const today = dayjs();
   const [currentMonth, setCurrentMonth] = useState(today);
@@ -25,7 +28,6 @@ const LeaveCalendar = ({
   const prevMonth = () => setCurrentMonth(currentMonth.subtract(1, "month"));
   const nextMonth = () => setCurrentMonth(currentMonth.add(1, "month"));
 
-  // Filter leaves for the selected day
   const selectedDayLeaves = leaves.filter((l) =>
     l.date ? dayjs(l.date).isSame(selectedDate, "day") : false
   );
@@ -46,7 +48,7 @@ const LeaveCalendar = ({
       <div
         style={{
           border: "1px solid rgb(226, 232, 240)",
-          borderRadius: "40px",
+          borderRadius: `${containerRadius}px`, // ✅ from props
           padding: "22px",
           height: "600px",
         }}
@@ -119,13 +121,16 @@ const LeaveCalendar = ({
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(7, 1fr)",
+            gridTemplateColumns: `repeat(7, ${cellSize}px)`, // ✅ dynamic width
             gap: "0.5rem",
           }}
         >
           {/* Empty cells before month start */}
           {Array.from({ length: startDay }).map((_, i) => (
-            <div key={`empty-${i}`} />
+            <div
+              key={`empty-${i}`}
+              style={{ width: `${cellSize}px`, height: `${cellSize}px` }}
+            />
           ))}
 
           {/* Days */}
@@ -153,9 +158,9 @@ const LeaveCalendar = ({
                 whileTap={{ scale: 0.97 }}
                 onClick={() => setSelectedDate(date)}
                 style={{
-                  width: "70px",
-                  height: "70px",
-                  borderRadius: "12px",
+                  width: `${cellSize}px`,        // ✅ dynamic
+                  height: `${cellSize}px`,       // ✅ dynamic
+                  borderRadius: `${radius}px`,   // ✅ dynamic
                   background: isSelected
                     ? theme.selectedBg
                     : isToday
@@ -176,7 +181,7 @@ const LeaveCalendar = ({
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
-                  fontSize: "1rem",
+                  fontSize: `${cellSize / 3.5}px`, // ✅ font scales with cell size
                   fontWeight: "700",
                   color: isSelected
                     ? theme.secondary
@@ -209,18 +214,18 @@ const LeaveCalendar = ({
                           damping: 15,
                         }}
                         style={{
-                          width: "22px",
-                          height: "22px",
+                          width: `${cellSize / 3}px`, // ✅ avatar scales with cell
+                          height: `${cellSize / 3}px`,
                           borderRadius: "50%",
                           background: l.color || theme.secondary,
                           color: "white",
-                          fontSize: "0.7rem",
+                          fontSize: `${cellSize / 5}px`,
                           fontWeight: "600",
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
                           boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
-                          marginLeft: idx === 0 ? "0" : "-8px",
+                          marginLeft: idx === 0 ? "0" : `-${cellSize / 5}px`,
                           zIndex: firstTwo.length - idx,
                         }}
                         title={`${l.name || "Unknown"} - ${l.type || ""}`}
@@ -234,17 +239,17 @@ const LeaveCalendar = ({
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
                         style={{
-                          width: "22px",
-                          height: "22px",
+                          width: `${cellSize / 3}px`,
+                          height: `${cellSize / 3}px`,
                           borderRadius: "50%",
                           background: theme.accent,
                           color: "white",
-                          fontSize: "0.65rem",
+                          fontSize: `${cellSize / 6}px`,
                           fontWeight: "600",
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
-                          marginLeft: "-8px",
+                          marginLeft: `-${cellSize / 5}px`,
                           cursor: "default",
                         }}
                         title={dayLeaves
@@ -284,12 +289,7 @@ const LeaveCalendar = ({
                 flexDirection: "column",
               }}
             >
-              <h3
-                style={{
-                  margin: "0 0 1rem 0",
-                  color: theme.primary,
-                }}
-              >
+              <h3 style={{ margin: "0 0 1rem 0", color: theme.primary }}>
                 Leaves on {dayjs(selectedDate).format("MMMM D, YYYY")}
               </h3>
 
@@ -302,8 +302,6 @@ const LeaveCalendar = ({
                     overflowY: "auto",
                     flexGrow: 1,
                     paddingRight: "4px",
-
-                    // ✅ Scrollbar styling
                     scrollbarWidth: "thin",
                     scrollbarColor: `${theme.scrollbarThumb} ${theme.scrollbarTrack}`,
                   }}
@@ -314,11 +312,7 @@ const LeaveCalendar = ({
                       key={idx}
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{
-                        type: "tween",
-                        duration: 0.15,
-                        delay: idx * 0.03,
-                      }}
+                      transition={{ type: "tween", duration: 0.15, delay: idx * 0.03 }}
                       style={{
                         display: "flex",
                         alignItems: "center",
